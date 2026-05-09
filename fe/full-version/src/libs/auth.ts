@@ -1,15 +1,12 @@
 // Third-party Imports
 import CredentialProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
-import { PrismaAdapter } from '@auth/prisma-adapter'
 import { PrismaClient } from '@prisma/client'
 import type { NextAuthOptions } from 'next-auth'
-import type { Adapter } from 'next-auth/adapters'
 
 const prisma = new PrismaClient()
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma) as Adapter,
 
   // ** Configure one or more authentication providers
   // ** Please refer to https://next-auth.js.org/configuration/options#providers for more `providers` options
@@ -25,6 +22,7 @@ export const authOptions: NextAuthOptions = {
        * username or password attributes manually in following credentials object.
        */
       credentials: {},
+    
       async authorize(credentials) {
         /*
          * You need to provide your own logic here that takes the credentials submitted and returns either
@@ -33,30 +31,35 @@ export const authOptions: NextAuthOptions = {
          * You can also use the `req` object to obtain additional parameters (i.e., the request IP address)
          */
         const { email, password } = credentials as { email: string; password: string }
-
         try {
+          console.log("creddd1");
+          console.log(credentials);
           // ** Login API Call to match the user credentials and receive user data in response along with his role
-          const res = await fetch(`${process.env.API_URL}/login`, {
+          console.log("hit : ")
+          console.log(`${process.env.API_URL}/api/login`)
+          const res = await fetch(`${process.env.API_URL}/api/login`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({ email, password })
           })
-
+          console.log(res);
           const data = await res.json()
 
           if (res.status === 401) {
+            console.log("error gaes");
             throw new Error(JSON.stringify(data))
           }
 
           if (res.status === 200) {
+            console.log("sukses gaes");
             /*
              * Please unset all the sensitive information of the user either from API response or before returning
              * user data below. Below return statement will set the user object in the token and the same is set in
              * the session which will be accessible all over the app.
              */
-            return data
+            return {...data?.user,accessToken:data?.token}
           }
 
           return null
@@ -105,20 +108,24 @@ export const authOptions: NextAuthOptions = {
      * via `jwt()` callback to make them accessible in the `session()` callback
      */
     async jwt({ token, user }) {
+      console.log("panggil jwt");
       if (user) {
         /*
          * For adding custom parameters to user in session, we first need to add those parameters
          * in token which then will be available in the `session()` callback
          */
         token.name = user.name
+        token.x = user.accessToken
       }
 
       return token
     },
     async session({ session, token }) {
+      console.log("panggil session");
       if (session.user) {
         // ** Add custom params to user in session which are added in `jwt()` callback via `token` parameter
         session.user.name = token.name
+        session.user.xyz =   token.x
       }
 
       return session

@@ -3,39 +3,24 @@
 use App\Models\User;
 use Harishdurga\LaravelQuiz\Models\Quiz;
 use Harishdurga\LaravelQuiz\Models\QuizAttempt;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
 
-Route::get("/", function () {
-    return response()->json(["message" => "oke"]);
+Route::get('/', function () {
+    return response()->json(["message" => "backend web"]);
 });
 
-Route::get("/token", function () {
-    $user = User::find(2);
-    $token = $user->createToken("app_token");
-    return response()->json(["token" => $token]);
+Route::group(["prefix" =>"public"], function () {
+    Route::get("/quiz", function () {
+        $quiz = Quiz::all();
+        $quiz->load("questions");
+        return response()->json([
+            "data" => $quiz
+        ]);
+    });
 });
-Route::get("/info", function () {
-    return response()->json(["message" => "info"]);
-});
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-
-
-Route::group(["middleware" => ["auth:api"]], function ($router) {
+Route::group(["middleware" => ["auth:api"]], function () {
     Route::get("/quiz/", function () {
         $quiz = Quiz::all();
         $quiz->load("questions");
@@ -66,4 +51,23 @@ Route::group(["middleware" => ["auth:api"]], function ($router) {
 
         return response()->json(["quiz_attempt" => $quiz_attempt]);
     })->name("quiz.attempt-detail");
+});
+
+
+
+Route::post('/login', function () {
+    $user = request()->input("email");
+    $password  = request()->input("password");
+
+    $user = User::where("email", $user)->get()->first();
+    if ($user) {
+        if (Hash::check($password, $user->password)) {
+            $token = $user->createToken("app_token");
+            return response()->json([
+                "user" => $user,
+                "token" => $token
+            ]);
+        }
+    }
+    return response()->json(["message" => "failed"], 401);
 });

@@ -1,56 +1,73 @@
 {
-    "name": "harishdurga/laravel-quiz",
-    "description": "Provides Quiz Functionality",
-    "keywords": [
-        "harishdurga",
-        "laravel-quiz"
-    ],
-    "homepage": "https://github.com/harishdurga/laravel-quiz",
+    "$schema": "https://getcomposer.org/schema.json",
+    "name": "laravel/laravel",
+    "type": "project",
+    "description": "The skeleton application for the Laravel framework.",
+    "keywords": ["laravel", "framework"],
     "license": "MIT",
-    "type": "library",
-    "authors": [
-        {
-            "name": "Harish Durga",
-            "email": "durgaharish5@gmail.com",
-            "role": "Developer"
-        }
-    ],
     "require": {
-        "php": ">=8.2.0",
-        "illuminate/support": "^11.0"
+        "php": "^8.2",
+        "harishdurga/laravel-quiz": "^2.0",
+        "laravel/framework": "^11.31",
+        "laravel/passport": "^13.7",
+        "laravel/tinker": "^2.9"
     },
     "require-dev": {
-        "nunomaduro/larastan": "^2.0",
-        "orchestra/testbench": "^9.0",
-        "phpunit/phpunit": "^11.0"
+        "fakerphp/faker": "^1.23",
+        "laravel/pail": "^1.1",
+        "laravel/pint": "^1.13",
+        "laravel/sail": "^1.26",
+        "mockery/mockery": "^1.6",
+        "nunomaduro/collision": "^8.1",
+        "phpunit/phpunit": "^11.0.1"
     },
     "autoload": {
         "psr-4": {
-            "Harishdurga\\LaravelQuiz\\": "src",
-            "Harishdurga\\LaravelQuiz\\Database\\Factories\\": "database/factories",
-            "Harishdurga\\LaravelQuiz\\Database\\Seeders\\": "database/seeders"
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Harishdurga\\LaravelQuiz\\Tests\\": "tests"
+            "Tests\\": "tests/"
         }
     },
     "scripts": {
-        "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
-    },
-    "config": {
-        "sort-packages": true
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-update-cmd": [
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi",
+            "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
+            "@php artisan migrate --graceful --ansi"
+        ],
+        "dev": [
+            "Composer\\Config::disableProcessTimeout",
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite"
+        ]
     },
     "extra": {
         "laravel": {
-            "providers": [
-                "Harishdurga\\LaravelQuiz\\LaravelQuizServiceProvider"
-            ],
-            "aliases": {
-                "LaravelQuiz": "Harishdurga\\LaravelQuiz\\LaravelQuizFacade"
-            }
+            "dont-discover": []
         }
-    }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
 }

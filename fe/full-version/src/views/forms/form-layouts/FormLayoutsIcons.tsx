@@ -13,7 +13,7 @@ import Form from '@components/Form'
 const FormLayoutsWithIcon = () => {
   return (
     <Card>
-      <CardHeader title='Basic with Icons' />
+      <CardHeader title='Basic with Iconsx' />
       <CardContent>
         <Form>
           <Grid container spacing={6}>

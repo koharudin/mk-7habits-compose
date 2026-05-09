@@ -131,7 +131,11 @@ const UserDropdown = () => {
                   <Divider className='mlb-1' />
                   <MenuItem className='mli-2 gap-3' onClick={e => handleDropdownClose(e, '/pages/user-profile')}>
                     <i className='tabler-user' />
-                    <Typography color='text.primary'>My Profile</Typography>
+                    <Typography color='text.primary'>xMy Profile</Typography>
+                  </MenuItem>
+                  <MenuItem className='mli-2 gap-3' onClick={e => handleDropdownClose(e, '/pages/user-profile')}>
+                    <i className='tabler-user' />
+                    <Typography color='text.primary'>{JSON.stringify(session)}</Typography>
                   </MenuItem>
                   <MenuItem className='mli-2 gap-3' onClick={e => handleDropdownClose(e, '/pages/account-settings')}>
                     <i className='tabler-settings' />

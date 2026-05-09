@@ -48,8 +48,7 @@ const Footer = ({ mode }: { mode: Mode }) => {
                   <Logo color='var(--mui-palette-common-white)' />
                 </Link>
                 <Typography color='white' className='md:max-is-[390px] opacity-[0.78]'>
-                  Most Powerful & Comprehensive 🤩 React NextJS Admin Template with Elegant Material Design & Unique
-                  Layouts.
+                  a digital platform dedicated to preserving, documenting, and providing access to the rich heritage of Indonesian manuscripts
                 </Typography>
                 <div className='flex items-end'>
                   <CustomTextField
@@ -173,11 +172,10 @@ const Footer = ({ mode }: { mode: Mode }) => {
           )}
         >
           <Typography className='text-white' variant='body2'>
-            <span>{`© ${new Date().getFullYear()}, Made with `}</span>
-            <span>{`❤️`}</span>
+            <span>{`© ${new Date().getFullYear()}, Developed `}</span>
             <span>{` by `}</span>
-            <Link href='https://pixinvent.com/' target='_blank' className='font-medium text-white'>
-              Pixinvent
+            <Link href='https://mediakolaborasi.com/' target='_blank' className='font-medium text-white'>
+              ANDIRA MEDIA (AM) Technology
             </Link>
           </Typography>
           <div className='flex gap-1.5 items-center'>

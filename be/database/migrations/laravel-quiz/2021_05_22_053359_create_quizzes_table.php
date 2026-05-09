@@ -23,7 +23,7 @@ class CreateQuizzesTable extends Migration
         Schema::create($this->tableNames['topics'], function (Blueprint $table) {
             $table->id();
             $table->string('topic');
-            $table->string('slug')->unique();
+            $table->string('slug');
             $table->foreignId('parent_id')->nullable()->constrained($this->tableNames['topics'])->nullOnDelete();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
@@ -75,7 +75,7 @@ class CreateQuizzesTable extends Migration
         Schema::create($this->tableNames['quizzes'], function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('slug')->unique();
+            $table->string('slug');
             $table->text('description')->nullable();
             $table->float('total_marks')->default(0); //0 means no marks
             $table->float('pass_marks')->default(0); //0 means no pass marks
@@ -96,13 +96,12 @@ class CreateQuizzesTable extends Migration
             $table->id();
             $table->foreignId('quiz_id')->nullable()->constrained($this->tableNames['quizzes'])->cascadeOnDelete();
             $table->foreignId('question_id')->nullable()->constrained($this->tableNames['questions'])->cascadeOnDelete();
-            $table->unsignedFloat('marks')->default(0); //0 means no marks
-            $table->unsignedFloat('negative_marks')->default(0); //0 means no negative marks in case of wrong answer
+            $table->float('marks')->default(0); //0 means no marks
+            $table->float('negative_marks')->default(0); //0 means no negative marks in case of wrong answer
             $table->boolean('is_optional')->default(false); //0 means not optional, 1 means optional
             $table->unsignedInteger('order')->default(0);
             $table->timestamps();
             $table->softDeletes();
-            $table->unique(['quiz_id', 'question_id']);
         });
 
         // Quiz Attempts Table

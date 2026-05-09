@@ -81,7 +81,7 @@ const schema = object({
   password: pipe(
     string(),
     nonEmpty('This field is required'),
-    minLength(5, 'Password must be at least 5 characters long')
+    minLength(4, 'Password must be at least 4 characters long')
   )
 })
 
@@ -114,8 +114,8 @@ const Login = ({ mode }: { mode: SystemMode }) => {
   } = useForm<FormData>({
     resolver: valibotResolver(schema),
     defaultValues: {
-      email: 'admin@vuexy.com',
-      password: 'admin'
+      email: 'koharudin.mail07@gmail.com',
+      password: 'demo'
     }
   })
 
@@ -174,8 +174,8 @@ const Login = ({ mode }: { mode: SystemMode }) => {
           </div>
           <Alert icon={false} className='bg-[var(--mui-palette-primary-lightOpacity)]'>
             <Typography variant='body2' color='primary.main'>
-              Email: <span className='font-medium'>admin@vuexy.com</span> / Pass:{' '}
-              <span className='font-medium'>admin</span>
+              Email: <span className='font-medium'>koharudin.mail07@gmail.com</span> / Pass:{' '}
+              <span className='font-medium'>demo</span>
             </Typography>
           </Alert>
           <form
