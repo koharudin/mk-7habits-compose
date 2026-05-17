@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\QuizAttempt;
 use App\Models\User;
 use Harishdurga\LaravelQuiz\Models\Quiz;
-use Harishdurga\LaravelQuiz\Models\QuizAttempt;
+use Harishdurga\LaravelQuiz\Models\QuizAttemptAnswer;
+use Harishdurga\LaravelQuiz\Models\QuizQuestion;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 
@@ -20,7 +22,7 @@ Route::group(["prefix" =>"public"], function () {
         ]);
     });
 });
-Route::group(["middleware" => ["auth:api"]], function () {
+Route::group(["middleware" => ["auth.loggedin"]], function () {
     Route::get("/quiz/", function () {
         $quiz = Quiz::all();
         $quiz->load("questions");
@@ -36,17 +38,44 @@ Route::group(["middleware" => ["auth:api"]], function () {
             'participant_id' => $user->id,
             'participant_type' => get_class($user)
         ]);
-        $quiz_attempt->generateQuestion(30);
+        $quiz_attempt->duration = 60*60;
+        $quiz_attempt->start_time = now();
+        $quiz_attempt->save();
 
+        $quiz_attempt->generateQuestion(30);
         return response()->json(["message" => "generated quiz", "quiz_attempt_uuid" => $quiz_attempt->uuid]);
     })->name("quiz.start-attempt");
+
+    Route::post("/quiz-question/{uuid}", function ($uuid) {
+        $question = QuizQuestion::with(['question.options'])->where("uuid",$uuid)->get()->first();
+        return response()->json(["question"=>$question]);
+
+    })->name("quiz.all");
+
+    Route::post("/quiz-question/{uuid}/set-answer", function ($uuid) {
+        $answer = request()->input("answer");
+        $quiz_question = QuizQuestion::with(['question.options'])->where("uuid",$uuid)->get()->first();
+
+        $row = QuizAttemptAnswer::create(
+            [
+                'quiz_attempt_id' => $quiz_question->quiz_attempt_id,
+                'quiz_question_id' => $quiz_question->id,
+                'question_option_id' => $answer,
+            ]
+        );
+
+
+        return response()->json(["quiz_attempt_answer"=>$row]);
+
+    })->name("question.answer");
+
 
     Route::get("/quiz-attempt/{quiz_attempt_uuid}", function ($quiz_attempt_uuid) {
         $quiz_attempt = QuizAttempt::where("uuid", $quiz_attempt_uuid)->get()->first();
         if (!$quiz_attempt) {
             abort(404);
         }
-        $quiz_attempt->load(["participant", "questions"]);
+        $quiz_attempt->load(["participant", "quiz_questions.question.options:id,question_id,name"]);
         $score = $quiz_attempt->calculate_score();
 
         return response()->json(["quiz_attempt" => $quiz_attempt]);

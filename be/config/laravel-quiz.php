@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\QuestionOption;
+use App\Models\QuizAttempt;
+
 return [
 
     /*
@@ -45,7 +48,7 @@ return [
          * Default Harishdurga\LaravelQuiz\Models\Question::class
          */
 
-        'question_option' => Harishdurga\LaravelQuiz\Models\QuestionOption::class,
+        'question_option' => QuestionOption::class,
 
         /*
          * Default Harishdurga\LaravelQuiz\Models\Question::class
@@ -63,7 +66,7 @@ return [
          * Default Harishdurga\LaravelQuiz\Models\QuizAttempt::class
          */
 
-        'quiz_attempt' => Harishdurga\LaravelQuiz\Models\QuizAttempt::class,
+        'quiz_attempt' => QuizAttempt::class,
 
         /*
          * Default Harishdurga\LaravelQuiz\Models\QuizAttempt::class

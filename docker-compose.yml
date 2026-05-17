@@ -2,7 +2,7 @@ services:
   nginx:
     image: nginx:latest
     ports:
-      - "80:80"
+      - "2017:80"
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
@@ -25,5 +25,5 @@ services:
     volumes:
       - ./fe/full-version:/app
     ports:
-      - 3000
+      - 93:3000
     tty: true
