@@ -41,6 +41,24 @@ const verticalMenuData = (dictionary: Awaited<ReturnType<typeof getDictionary>>)
     ]
   },
   {
+    label: "Master",
+    icon: 'tabler-files',
+    children: [
+      {
+        label: "Quiz",
+        href: '/master/quiz',
+        target: '_blank',
+        excludeLang: true
+      },
+      {
+        label: "Question Bank",
+        href: '/master/questions',
+        target: '_blank',
+        excludeLang: true
+      },
+    ]
+  },
+  {
     label: dictionary['navigation'].frontPages,
     icon: 'tabler-files',
     children: [

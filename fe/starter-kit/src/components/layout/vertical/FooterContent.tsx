@@ -29,22 +29,16 @@ const FooterContent = () => {
       </p>
       {!isBreakpointReached && (
         <div className='flex items-center gap-4'>
-          <Link href='https://themeforest.net/licenses/standard' target='_blank' className='text-primary'>
-            License
-          </Link>
-          <Link href='https://themeforest.net/user/pixinvent/portfolio' target='_blank' className='text-primary'>
-            More Themes
-          </Link>
-          <Link
-            href='https://demos.pixinvent.com/vuexy-nextjs-admin-template/documentation'
-            target='_blank'
-            className='text-primary'
-          >
-            Documentation
-          </Link>
-          <Link href='https://pixinvent.ticksy.com' target='_blank' className='text-primary'>
-            Support
-          </Link>
+                     <Link
+                      href='https://mediakolaborasi.com'
+                      target='_blank'
+                      className='text-primary'
+                    >
+                      Dokumentasi
+                    </Link>
+                    <Link href='https://mediakolaborasi.com' target='_blank' className='text-primary'>
+                      Bantuan
+                    </Link>
         </div>
       )}
     </div>

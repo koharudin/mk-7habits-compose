@@ -13,7 +13,9 @@ return new class extends Migration
     {
         //quiz_attempt_id
          Schema::table('quiz_questions', function (Blueprint $table) {
-            $table->bigInteger('quiz_attempt_id');
+            $table->bigInteger('quiz_attempt_id')->nullable();
+            $table->uuid("uuid")->nullable();
+            $table->text("answer")->nullable();
         });
     }
 

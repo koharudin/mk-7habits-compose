@@ -2,6 +2,7 @@
 
 use App\Models\QuestionOption;
 use App\Models\QuizAttempt;
+use App\Models\Quiz;
 
 return [
 
@@ -60,7 +61,7 @@ return [
          * Default Harishdurga\LaravelQuiz\Models\Quiz::class
          */
 
-        'quiz' => Harishdurga\LaravelQuiz\Models\Quiz::class,
+        'quiz' => Quiz::class,
 
         /*
          * Default Harishdurga\LaravelQuiz\Models\QuizAttempt::class

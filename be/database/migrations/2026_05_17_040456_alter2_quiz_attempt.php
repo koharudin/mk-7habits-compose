@@ -17,6 +17,10 @@ return new class extends Migration
             $table->timestamp('start_time')->nullable();
             $table->timestamp('end_time')->nullable();
         });
+        Schema::table('quizzes', function (Blueprint $table) {
+            $table->integer('max_questions')->default(0);
+            $table->boolean("is_generate_random")->default(true);
+        });
     }
 
     /**

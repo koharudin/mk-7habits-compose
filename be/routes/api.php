@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\QuizController;
 use App\Models\QuizAttempt;
 use App\Models\User;
 use Harishdurga\LaravelQuiz\Models\Quiz;
@@ -23,13 +24,8 @@ Route::group(["prefix" =>"public"], function () {
     });
 });
 Route::group(["middleware" => ["auth.loggedin"]], function () {
-    Route::get("/quiz/", function () {
-        $quiz = Quiz::all();
-        $quiz->load("questions");
-        return response()->json([
-            "data" => $quiz
-        ]);
-    })->name("quiz.detail");
+    Route::resource("quiz",QuizController::class);
+    
     Route::post("/quiz/{id}/attempt", function ($id) {
         $quiz = Quiz::find($id);
         $user = auth()->user();
@@ -56,6 +52,9 @@ Route::group(["middleware" => ["auth.loggedin"]], function () {
         $answer = request()->input("answer");
         $quiz_question = QuizQuestion::with(['question.options'])->where("uuid",$uuid)->get()->first();
 
+        //blocking
+        dd($quiz_question->quiz);
+        
         $row = QuizAttemptAnswer::create(
             [
                 'quiz_attempt_id' => $quiz_question->quiz_attempt_id,
@@ -63,7 +62,8 @@ Route::group(["middleware" => ["auth.loggedin"]], function () {
                 'question_option_id' => $answer,
             ]
         );
-
+        $quiz_question->answer = $answer;
+        $quiz_question->save();
 
         return response()->json(["quiz_attempt_answer"=>$row]);
 
@@ -76,10 +76,18 @@ Route::group(["middleware" => ["auth.loggedin"]], function () {
             abort(404);
         }
         $quiz_attempt->load(["participant", "quiz_questions.question.options:id,question_id,name"]);
+        return response()->json(["quiz_attempt" => $quiz_attempt]);
+    })->name("quiz.attempt-detail");
+    Route::get("/quiz-attempt-result/{quiz_attempt_uuid}", function ($quiz_attempt_uuid) {
+        $quiz_attempt = QuizAttempt::where("uuid", $quiz_attempt_uuid)->get()->first();
+        if (!$quiz_attempt) {
+            abort(404);
+        }
+        $quiz_attempt->load(["participant", "quiz_questions.question.options:id,question_id,name"]);
         $score = $quiz_attempt->calculate_score();
 
         return response()->json(["quiz_attempt" => $quiz_attempt]);
-    })->name("quiz.attempt-detail");
+    })->name("quiz.attempt-result");
 });
 
 

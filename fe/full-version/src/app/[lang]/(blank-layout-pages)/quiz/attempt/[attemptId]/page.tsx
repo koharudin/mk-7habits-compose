@@ -19,36 +19,17 @@ const formatTime = (seconds: number) => {
 
   return `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
 }
-const PanelQuestion = ({ attemptId, selectedQuestionUUID }) => {
-  const [dataQuestion, setDataQuestion] = useState()
-  const [answeredOptions, setAnsweredOptions] = useState()
-  const onLoad = async function () {
-    const res = await api.post('/quiz-question/' + selectedQuestionUUID);
-    setDataQuestion(res?.data?.question)
-    setAnsweredOptions(res?.data?.question?.answer)
-  }
+const PanelQuestion = ({ selectedQuestion, setSelectedQuestion }) => {
 
   const updateLocalAnswer = function (answer) {
-    const quiz_attempt = localStorage.getItem("quiz_attempt_" + attemptId);
-    const quiz_attempt_obj = JSON.parse(quiz_attempt);
-    const quizQuestions =
-      quiz_attempt_obj.quiz_attempt.quiz_questions
-
-    const question = quizQuestions.find(
-      q => q.uuid === dataQuestion.uuid
-    )
-
-    if (question) {
-      question.answer = answer
+    if (selectedQuestion) {
+      selectedQuestion.answer = answer
     }
 
-    localStorage.setItem(
-      'quiz_attempt_' + attemptId,
-      JSON.stringify(quiz_attempt_obj)
-    )
+    setSelectedQuestion({ ...selectedQuestion })
   }
   const onSetAnswer = async (answer) => {
-    const res = await api.post('/quiz-question/' + selectedQuestionUUID + "/set-answer", {
+    const res = await api.post('/quiz-question/' + selectedQuestion.uuid + "/set-answer", {
       answer: answer
     });
 
@@ -59,27 +40,20 @@ const PanelQuestion = ({ attemptId, selectedQuestionUUID }) => {
   }
 
 
-  useEffect(() => {
-    if (selectedQuestionUUID) {
-      onLoad();
-    }
-  }, [
-    selectedQuestionUUID
-  ])
   return <><></>
 
     <Card>
 
       <CardContent>
-        {!selectedQuestionUUID && <>Pilih Pertanyaan d samping...</>}
-        {selectedQuestionUUID &&
-          <>{dataQuestion?.question?.name}
+        {!selectedQuestion && <>Pilih Pertanyaan d samping...</>}
+        {selectedQuestion &&
+          <>{selectedQuestion?.question?.name}
             <br></br>
-            {dataQuestion?.question?.options.map(function (o, keyo) {
+            {selectedQuestion?.question?.options.map(function (o, keyo) {
               return <Button onClick={() => {
                 onSetAnswer(o.id)
-                setAnsweredOptions(o.id)
-              }} variant='contained' color={answeredOptions == o.id ? "warning" : ""} className='whitespace-nowrap  mr-2 mb-2' size="small" key={keyo}>{o?.name}</Button>
+                //setAnsweredOptions(o.id)
+              }} variant='contained' color={selectedQuestion.answer == o.id ? "warning" : ""} className='whitespace-nowrap  mr-2 mb-2' size="small" key={keyo}>{o?.name}</Button>
             })}
           </>
         }
@@ -88,28 +62,26 @@ const PanelQuestion = ({ attemptId, selectedQuestionUUID }) => {
       </CardContent>
     </Card></>
 }
-const BoardQuestions = ({ questions, selectedQuestionUUID, setSelectedQuestionUUID }) => {
+const BoardQuestions = ({ questions, setSelectedQuestion, selectedQuestion }) => {
   return questions?.map(function (r, key) {
     return <Button key={key + 1} onClick={() => {
       window.location.hash = 'qid=' + r.uuid
-      setSelectedQuestionUUID(r.uuid)
+      setSelectedQuestion(r)
     }}
       variant='contained'
       color={r.answer ? "warning" : "primary"}
-      endIcon={r.uuid == selectedQuestionUUID ? <i className='tabler-pencil' /> : ""}
+      endIcon={r.uuid == setSelectedQuestion.uuid ? <i className='tabler-pencil' /> : ""}
       className='whitespace-nowrap  mr-2 mb-2'
       target='_blank' size="small">{key + 1}</Button>
   });
 }
 export default function Page({ params }: { params: Promise<{ attemptId: string }> }) {
-  const [startTime,setStartTime] = useState();
-  const [duration,setDuration] = useState();
-
-
+  const [startTime, setStartTime] = useState();
+  const [duration, setDuration] = useState();
 
   const { attemptId } = use(params);
-  const [data, setData] = useState();
-  const [selectedQuestionUUID, setSelectedQuestionUUID] = useState();
+  const [questions, setQuestions] = useState()
+  const [selectedQuestion, setSelectedQuestion] = useState();
   const loadQuizAttempt = async function () {
     const res = await api.get("/quiz-attempt/" + attemptId)
     localStorage.setItem(
@@ -118,12 +90,16 @@ export default function Page({ params }: { params: Promise<{ attemptId: string }
     )
     setStartTime(res?.data?.quiz_attempt?.start_time)
     setDuration(res?.data?.quiz_attempt?.duration)
-    setData(res.data)
+    setQuestions(res?.data?.quiz_attempt?.quiz_questions)
   }
 
   const [qid, setQid] = useState('')
 
 
+  useEffect(() => {
+    console.log("update selectedQuestion");
+    console.log(selectedQuestion);
+  }, [selectedQuestion])
   useEffect(() => {
     const updateHash = () => {
       const params = new URLSearchParams(
@@ -143,25 +119,28 @@ export default function Page({ params }: { params: Promise<{ attemptId: string }
   }, [])
 
   useEffect(() => {
-    setSelectedQuestionUUID(qid);
-  }, [qid])
+    if (qid && questions) {
+      const question = questions.find((r) => r.uuid == qid);
+      setSelectedQuestion(question)
+    }
+  }, [qid, questions])
   useEffect(() => {
     loadQuizAttempt();
   }, [])
   return <section className={classnames('md:plb-[100px] plb-6', frontCommonStyles.layoutSpacing)}>
 
     <Card>
-      <CardHeader title={<QuizTimer start_time={startTime} duration={duration}/>}>
+      <CardHeader title={<QuizTimer start_time={startTime} duration={duration} />}>
 
       </CardHeader>
       <CardContent>
         <Grid container spacing={6}>
           <Grid size={{ xs: 6 }}>
 
-            <PanelQuestion attemptId={attemptId} selectedQuestionUUID={selectedQuestionUUID}></PanelQuestion>
+            <PanelQuestion setSelectedQuestion={setSelectedQuestion} selectedQuestion={selectedQuestion}></PanelQuestion>
           </Grid>
           <Grid size={{ xs: 6 }}>
-            <BoardQuestions attempt_uuid={attemptId} setSelectedQuestionUUID={setSelectedQuestionUUID} selectedQuestionUUID={selectedQuestionUUID} questions={data?.quiz_attempt?.quiz_questions}></BoardQuestions>
+            <BoardQuestions attempt_uuid={attemptId} setSelectedQuestion={setSelectedQuestion} selectedQuestion={selectedQuestion} questions={questions} setQuestions={setQuestions}></BoardQuestions>
           </Grid>
 
         </Grid>

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\QuizQuestion as ModelsQuizQuestion;
 use Harishdurga\LaravelQuiz\Models\Question;
 use Harishdurga\LaravelQuiz\Models\Quiz;
 use Harishdurga\LaravelQuiz\Models\QuizAttempt as ModelsQuizAttempt;
@@ -9,9 +10,7 @@ use Harishdurga\LaravelQuiz\Models\QuizQuestion;
 use Illuminate\Support\Str;
 
  class QuizAttempt extends ModelsQuizAttempt {
-    public function generateQuestion(){
-
-    }
+   
     protected static function booted(): void
     {
         static::creating(function ($model) {
@@ -21,8 +20,26 @@ use Illuminate\Support\Str;
 
         });
     }   
+
+    public function generateQuestion(){
+        if($this->quiz->is_generate_random){
+            $list = QuizQuestion::where("quiz_id",$this->quiz->id)->whereNull('quiz_attempt_id')->get()->pluck("id")->shuffle()->take($this->quiz->max_questions);
+            $quiz_attempt_id = $this->id;
+            $list->each(function($r,$index) use($quiz_attempt_id){
+                $generated  = new ModelsQuizQuestion();
+                $generated->quiz_id = $this->quiz->id;
+                $generated->quiz_attempt_id =  $quiz_attempt_id;
+                $generated->question_id = $r;
+                $generated->marks  = 4;
+                $generated->negative_marks =  -1;
+                $generated->order = $index;
+                $generated->save();
+            });
+        }
+    }
     public function quiz_questions(){
-        return $this->hasMany(QuizQuestion::class,'quiz_attempt_id','id');
+        //return $this->hasMany(QuizQuestion::class,'quiz_id','quiz_id')->orderBy("order","asc");
+        return $this->hasMany(QuizQuestion::class,'quiz_attempt_id','id')->orderBy("order","asc");
     }
     public function calculate_score($data = null): float
     {

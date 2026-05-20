@@ -12,6 +12,7 @@ import Link from 'next/link'
 import styles from '@core/styles/table.module.css'
 
 import api from '@/utils/axios'
+import { useParams } from 'next/navigation'
 
 export type DataType = {
   id: number
@@ -22,7 +23,8 @@ export default function ListQuiz() {
   const [data, setData] = useState<DataType[]>([])
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
-
+  const params = useParams()
+  const { lang: locale } = params
   const onLoad = async () => {
     const res = await api.get('/public/quiz')
     setData(res?.data?.data || [])
@@ -66,15 +68,28 @@ export default function ListQuiz() {
                   <td>{row.name}</td>
 
                   <td>
-                    <Button
-                      component={Link}
-                      variant='contained'
-                      href={`/quiz/${row.id}/attempt`}
-                      target='_blank'
-                      size='small'
-                    >
-                      Start Attempt
-                    </Button>
+                    <div className='flex gap-4'>
+                      <Button
+                        component={Link}
+                        variant='contained'
+                        href={`/${locale}/master/quiz/${row.slug}/edit`}
+                        target='_blank'
+                        size='small'
+                        startIcon={ <i className='tabler-settings text-[22px]' />}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        component={Link}
+                        variant='contained'
+                        href={`/${locale}/master/quiz/${row.slug}/detail`}
+                        target='_blank'
+                        size='small'
+                        startIcon={ <i className='tabler--air-balloon-filled' />}
+                      >
+                        Detail
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ))
