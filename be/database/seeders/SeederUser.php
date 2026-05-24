@@ -22,6 +22,7 @@ class SeederUser extends Seeder
         $user->email = "koharudin.mail07@gmail.com";
         $user->password = Hash::make("demo");
         $user->save();
+        $user->assignRole('Super Admin');
 
          //Admin
          $user  = new User();
@@ -29,6 +30,7 @@ class SeederUser extends Seeder
          $user->email = "admin@gmail.com";
          $user->password = Hash::make("demo");
          $user->save();
+         $user->assignRole('Admin');
 
 
         //Guru
@@ -37,6 +39,7 @@ class SeederUser extends Seeder
         $user->email = "guru@gmail.com";
         $user->password = Hash::make("demo");
         $user->save();
+        $user->assignRole('Guru');
 
          //Walmur
          $user  = new User();
@@ -44,6 +47,7 @@ class SeederUser extends Seeder
          $user->email = "walmur@gmail.com";
          $user->password = Hash::make("demo");
          $user->save();
+         $user->assignRole('Wali Murid');
 
           //Siswa
           $user  = new User();
@@ -51,5 +55,7 @@ class SeederUser extends Seeder
           $user->email = "siswa@gmail.com";
           $user->password = Hash::make("demo");
           $user->save();
+
+          $user->assignRole('Murid');
     }
 }

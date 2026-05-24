@@ -9,8 +9,6 @@ services:
     depends_on:
       - be
       - fe
-    networks:
-      - internal
   be:
     container_name: mk-7habits-be
     restart: always
@@ -25,9 +23,9 @@ services:
     tty: true
     environment:
       - DB_CONNECTION=pgsql
-      - DB_HOST=192.168.0.104
+      - DB_HOST=host.docker.internal
       - DB_PORT=5432
-      - DB_DATABASE=db_prod_7habits
+      - DB_DATABASE=db_7habits
       - DB_USERNAME=postgres
       - DB_PASSWORD=postgres
       - LOG_CHANNEL=stderr
@@ -38,13 +36,14 @@ services:
       - REDIS_HOST=127.0.0.1
       - REDIS_PASSWORD=null
       - REDIS_PORT=6379
-      - APP_KEY=base64:xViwJX5AVdksKHz1bv0/4mcriebW+j3G0IsrxqHEn/Q=
+      - APP_KEY=base64:deI0PtRyyd+1nhnFdJDOqsNsxxDdMr2FvM8ouaJ9TcQ=
       - APP_NAME=Laravel
       - APP_ENV=local
       - APP_DEBUG=true
       - APP_TIMEZONE=UTC
       - APP_URL=http://localhost
-
+      - PASSPORT_PERSONAL_ACCESS_CLIENT_ID=a1db0fd6-61d1-4577-925b-ee2401ae35b0
+      - PASSPORT_PERSONAL_ACCESS_CLIENT_SECRET=UOYINeZRKquYTiESqD2AovSYLNeFUEeQwdUwcDTw
       - APP_LOCALE=en
       - APP_FALLBACK_LOCALE=en
       - APP_FAKER_LOCALE=en_US
@@ -54,9 +53,6 @@ services:
       - PHP_CLI_SERVER_WORKERS=4
 
       - BCRYPT_ROUNDS=12
-    networks:
-      - monitoring
-      - internal
   fe:
     restart: always
     build:
@@ -67,8 +63,6 @@ services:
     ports:
       - 93:3000
     tty: true
-    networks:
-      - internal
 networks:
   monitoring:
     external: true

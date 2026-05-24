@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('trx_activity', function (Blueprint $table) {
             $table->id();
+            $table->timestamp("tgl");
             $table->bigInteger("student_id");
             $table->bigInteger("indicator_id");
             $table->integer("skor");

@@ -5,11 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Sekolah extends Model
+class Student extends Model
 {
     //
-    public $table = "sekolah";
-
+    public $table = "student";
     protected static function booted(): void
     {
         static::creating(function ($model) {

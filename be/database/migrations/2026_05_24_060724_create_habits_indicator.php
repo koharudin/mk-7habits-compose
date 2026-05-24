@@ -13,9 +13,12 @@ return new class extends Migration
     {
         Schema::create('habits_indicators', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger("habit_id");
             $table->string("name");
-            $table->text("kriteria_ketercapaian");
-            $table->text("penilaian");
+            $table->text("achievement_criteria");
+            $table->text("assessment");
+            $table->string("score");
+            $table->integer("order")->default(1);
             $table->timestamps();
         });
     }

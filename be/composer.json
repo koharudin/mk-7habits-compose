@@ -7,10 +7,10 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "harishdurga/laravel-quiz": "^2.0",
         "laravel/framework": "^11.31",
         "laravel/passport": "^13.7",
         "laravel/tinker": "^2.9",
+        "spatie/laravel-permission": "^6.25",
         "spatie/laravel-prometheus": "^1.2"
     },
     "require-dev": {

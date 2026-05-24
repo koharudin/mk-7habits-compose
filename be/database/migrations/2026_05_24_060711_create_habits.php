@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('habits', function (Blueprint $table) {
             $table->id();
             $table->string("name");
+            $table->string("slug")->nullable();
+            $table->text("description");
             $table->integer("order")->default(1);
             $table->uuid("uuid");
             $table->timestamps();
