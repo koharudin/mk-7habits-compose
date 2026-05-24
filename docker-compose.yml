@@ -1,14 +1,19 @@
 services:
   nginx:
     image: nginx:latest
+    restart: always
     ports:
-      - "2017:80"
+      - "2027:80"
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - be
       - fe
+    networks:
+      - internal
   be:
+    container_name: mk-7habits-be
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile
@@ -18,24 +23,54 @@ services:
     ports:
       - 92:80
     tty: true
+    environment:
+      - DB_CONNECTION=pgsql
+      - DB_HOST=192.168.0.104
+      - DB_PORT=5432
+      - DB_DATABASE=db_prod_7habits
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+      - LOG_CHANNEL=stderr
+      - LOG_STACK=single
+      - LOG_DEPRECATIONS_CHANNEL=null
+      - LOG_LEVEL=debug
+      - REDIS_CLIENT=phpredis
+      - REDIS_HOST=127.0.0.1
+      - REDIS_PASSWORD=null
+      - REDIS_PORT=6379
+      - APP_KEY=base64:xViwJX5AVdksKHz1bv0/4mcriebW+j3G0IsrxqHEn/Q=
+      - APP_NAME=Laravel
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - APP_TIMEZONE=UTC
+      - APP_URL=http://localhost
+
+      - APP_LOCALE=en
+      - APP_FALLBACK_LOCALE=en
+      - APP_FAKER_LOCALE=en_US
+
+      - APP_MAINTENANCE_DRIVER=file
+
+      - PHP_CLI_SERVER_WORKERS=4
+
+      - BCRYPT_ROUNDS=12
+    networks:
+      - monitoring
+      - internal
   fe:
+    restart: always
     build:
-      context: .
+      context: ./fe/full-version
       dockerfile: fe.Dockerfile
     volumes:
       - ./fe/full-version:/app
     ports:
       - 93:3000
     tty: true
-  postgres:
-    image: postgres:16
-    container_name: postgres_db
-    restart: always
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: db_tryout
-    volumes:
-      - ./docker-dev-volumes/postgres_data:/var/lib/postgresql/data
+    networks:
+      - internal
+networks:
+  monitoring:
+    external: true
+  internal:
+    driver: bridge

@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
-        Schema::table('quiz_attempts', function (Blueprint $table) {
-            $table->uuid('uuid')->nullable();
+        Schema::create('trx_activity', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger("student_id");
+            $table->bigInteger("indicator_id");
+            $table->integer("skor");
+            $table->timestamps();
         });
     }
 
@@ -22,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('trx_activity');
     }
 };

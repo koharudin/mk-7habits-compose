@@ -8,12 +8,18 @@ use Harishdurga\LaravelQuiz\Models\QuizAttemptAnswer;
 use Harishdurga\LaravelQuiz\Models\QuizQuestion;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Log;
 
 Route::get('/', function () {
     return response()->json(["message" => "backend web"]);
 });
-
+Route::get("test-log",function(){
+    echo 123;
+    $t=  now()->timestamp;
+    echo $t;
+    Log::info("test-log cek ".$t);
+    echo "done";
+});
 Route::group(["prefix" =>"public"], function () {
     Route::get("/quiz", function () {
         $quiz = Quiz::all();

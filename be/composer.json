@@ -10,7 +10,8 @@
         "harishdurga/laravel-quiz": "^2.0",
         "laravel/framework": "^11.31",
         "laravel/passport": "^13.7",
-        "laravel/tinker": "^2.9"
+        "laravel/tinker": "^2.9",
+        "spatie/laravel-prometheus": "^1.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

@@ -14,6 +14,8 @@ class SeederUser extends Seeder
      */
     public function run(): void
     {
+        //SuperAdmin
+
         //Admin
         $user  = new User();
         $user->name = "Koharudin";
@@ -21,11 +23,33 @@ class SeederUser extends Seeder
         $user->password = Hash::make("demo");
         $user->save();
 
-        //Demo
+         //Admin
+         $user  = new User();
+         $user->name = "Admin";
+         $user->email = "admin@gmail.com";
+         $user->password = Hash::make("demo");
+         $user->save();
+
+
+        //Guru
         $user  = new User();
-        $user->name = "Demo";
-        $user->email = "demo@gmail.com";
+        $user->name = "Guru";
+        $user->email = "guru@gmail.com";
         $user->password = Hash::make("demo");
         $user->save();
+
+         //Walmur
+         $user  = new User();
+         $user->name = "Walmur";
+         $user->email = "walmur@gmail.com";
+         $user->password = Hash::make("demo");
+         $user->save();
+
+          //Siswa
+          $user  = new User();
+          $user->name = "Siswa";
+          $user->email = "siswa@gmail.com";
+          $user->password = Hash::make("demo");
+          $user->save();
     }
 }

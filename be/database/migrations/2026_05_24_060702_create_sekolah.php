@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //quiz_attempt_id
-         Schema::table('quiz_questions', function (Blueprint $table) {
-            $table->bigInteger('quiz_attempt_id')->nullable();
-            $table->uuid("uuid")->nullable();
-            $table->text("answer")->nullable();
+        Schema::create('sekolah', function (Blueprint $table) {
+            $table->id();
+            $table->string("name");
+            $table->uuid("uuid");
+            $table->timestamps();
         });
     }
 
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('sekolah');
     }
 };
