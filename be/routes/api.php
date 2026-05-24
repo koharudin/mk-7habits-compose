@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\MasterHabitIndikatorController;
 use App\Http\Controllers\MasterHabitsController;
+use App\Http\Controllers\MasterSekolahController;
+use App\Http\Controllers\MasterStudentController;
 use App\Http\Controllers\QuizController;
 use App\Models\QuizAttempt;
 use App\Models\User;
@@ -31,6 +33,8 @@ Route::group(["middleware" => ["auth:api"]], function () {
     });
 
     Route::resource("master/habits", MasterHabitsController::class);
+    Route::resource("master/sekolah", MasterSekolahController::class);
+    Route::resource("master/student", MasterStudentController::class);
     Route::resource("master/habits/{habit}/indicators", MasterHabitIndikatorController::class);
 });
 

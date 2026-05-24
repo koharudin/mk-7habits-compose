@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\HabitRequest;
-use App\Models\Habits;
-use Illuminate\Http\Request;
+use App\Http\Requests\SekolahRequest;
+use App\Models\Sekolah;
 
-class MasterHabitsController extends Controller
+class MasterSekolahController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +13,7 @@ class MasterHabitsController extends Controller
     public function index()
     {
         //
-        $query = Habits::with(['objIndikators']);
+        $query = Sekolah::query();
 
         if (request()->has("use_pagination")) {
             $use_pagination = request()->input("use_pagination");
@@ -36,11 +35,11 @@ class MasterHabitsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(HabitRequest $request)
+    public function store(SekolahRequest $request)
     {
-        $record = new Habits();
+        //
+        $record = new Sekolah();
         $record->name = $request->input("name");
-        $record->description = $request->input("description");
         $record->save();
         return response()->json($record);
     }
@@ -48,7 +47,7 @@ class MasterHabitsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Habits $habit)
+    public function show(Sekolah $sekolah)
     {
         //
     }
@@ -56,21 +55,19 @@ class MasterHabitsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Habits $habit)
+    public function edit(Sekolah $sekolah)
     {
         //
-        
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(HabitRequest $request, Habits $habit)
+    public function update(SekolahRequest $request, Sekolah $sekolah)
     {
         //
-        $record = $habit;
+        $record = $sekolah;
         $record->name = $request->input("name");
-        $record->description = $request->input("description");
         $record->save();
         return response()->json($record);
     }
@@ -78,12 +75,11 @@ class MasterHabitsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Habits $habit)
+    public function destroy(Sekolah $sekolah)
     {
         //
-        $record = $habit;
+        $record = $sekolah;
         $record->delete();
         return response()->json($record);
     }
-
 }

@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\HabitRequest;
-use App\Models\Habits;
-use Illuminate\Http\Request;
+use App\Http\Requests\StudentRequest;
+use App\Models\Student;
 
-class MasterHabitsController extends Controller
+class MasterStudentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +13,7 @@ class MasterHabitsController extends Controller
     public function index()
     {
         //
-        $query = Habits::with(['objIndikators']);
+        $query = Student::query();
 
         if (request()->has("use_pagination")) {
             $use_pagination = request()->input("use_pagination");
@@ -36,11 +35,13 @@ class MasterHabitsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(HabitRequest $request)
+    public function store(StudentRequest $request)
     {
-        $record = new Habits();
+        //
+        $record = new Student();
+        $record->nis = $request->input("nis");
+        $record->sekolah_id = $request->input("sekolah_id");
         $record->name = $request->input("name");
-        $record->description = $request->input("description");
         $record->save();
         return response()->json($record);
     }
@@ -48,7 +49,7 @@ class MasterHabitsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Habits $habit)
+    public function show(Student $student)
     {
         //
     }
@@ -56,21 +57,21 @@ class MasterHabitsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Habits $habit)
+    public function edit(Student $student)
     {
         //
-        
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(HabitRequest $request, Habits $habit)
+    public function update(StudentRequest $request, Student $student)
     {
         //
-        $record = $habit;
+        $record = $student;
+        $record->nis = $request->input("nis");
+        $record->sekolah_id = $request->input("sekolah_id");
         $record->name = $request->input("name");
-        $record->description = $request->input("description");
         $record->save();
         return response()->json($record);
     }
@@ -78,12 +79,11 @@ class MasterHabitsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Habits $habit)
+    public function destroy(Student $student)
     {
         //
-        $record = $habit;
+        $record = $student;
         $record->delete();
         return response()->json($record);
     }
-
 }
