@@ -9,8 +9,19 @@ services:
     depends_on:
       - be
       - fe
+
+  postgres:
+    image: postgres:16
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: db_7habits
+    volumes:
+      - ./docker-dev-volumes/postgres_data:/var/lib/postgresql/data
   be:
-    container_name: mk-7habits-be
     restart: always
     build:
       context: .
@@ -23,7 +34,7 @@ services:
     tty: true
     environment:
       - DB_CONNECTION=pgsql
-      - DB_HOST=host.docker.internal
+      - DB_HOST=postgres
       - DB_PORT=5432
       - DB_DATABASE=db_7habits
       - DB_USERNAME=postgres

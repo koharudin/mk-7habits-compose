@@ -143,21 +143,7 @@ const FrontMenu = (props: Props) => {
       >
         Contact us
       </Typography>
-      <DropdownMenu
-        mode={mode}
-        isBelowLgScreen={isBelowLgScreen}
-        isDrawerOpen={isDrawerOpen}
-        setIsDrawerOpen={setIsDrawerOpen}
-      />
-      <Typography
-        component={Link}
-        color='text.primary'
-        href='/'
-        target='_blank'
-        className='font-medium plb-3 pli-1.5 hover:text-primary'
-      >
-        Admin
-      </Typography>
+      
     </Wrapper>
   )
 }
