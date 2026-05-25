@@ -4,12 +4,7 @@ const nextConfig: NextConfig = {
   basePath: process.env.BASEPATH,
   redirects: async () => {
     return [
-      {
-        source: '/',
-        destination: '/en/dashboards/crm',
-        permanent: true,
-        locale: false
-      },
+      
       {
         source: '/:lang(en|fr|ar)',
         destination: '/:lang/dashboards/crm',
@@ -22,6 +17,18 @@ const nextConfig: NextConfig = {
         permanent: true,
         locale: false
       }
+    ]
+  },
+  async rewrites() {
+    return [
+      /**
+       * Alias root -> landing page
+       * URL browser tetap "/"
+       */
+      {
+        source: '/',
+        destination: '/front-pages/landing-page'
+      },
     ]
   }
 }

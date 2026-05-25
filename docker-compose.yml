@@ -14,7 +14,7 @@ services:
     image: postgres:16
     restart: always
     ports:
-      - "5432:5432"
+      - "5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -73,6 +73,12 @@ services:
       - ./fe/full-version:/app
     ports:
       - 93:3000
+    environment:
+      - API_URL=http://api.local:2027/backend/api
+      - NEXT_PUBLIC_APP_URL=http://api.local:2027
+      - NEXTAUTH_SECRET=/83vTMRaUYJObtDcbEa0AqhNXJ2gGVyNkol1nugIFi0=
+    extra_hosts:
+      - "api.local:host-gateway"
     tty: true
 networks:
   monitoring:
