@@ -12,6 +12,8 @@ services:
 
   postgres:
     image: postgres:16
+    network:
+      - internal
     restart: always
     ports:
       - "5432"
@@ -23,6 +25,8 @@ services:
       - ./docker-dev-volumes/postgres_data:/var/lib/postgresql/data
   be:
     restart: always
+    networks:
+    - internal
     build:
       context: .
       dockerfile: Dockerfile
