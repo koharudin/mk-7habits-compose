@@ -4,12 +4,7 @@ const nextConfig: NextConfig = {
   basePath: process.env.BASEPATH,
   redirects: async () => {
     return [
-      {
-        source: '/',
-        destination: '/:lang/dashboards/crm',
-        permanent: true,
-        locale: false
-      },
+     
       {
         source: '/:lang(en|fr|ar)',
         destination: '/:lang/dashboards/crm',

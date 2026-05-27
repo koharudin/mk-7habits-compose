@@ -2,6 +2,8 @@ services:
   nginx:
     image: nginx:latest
     restart: always
+    networks:
+      - internal
     ports:
       - "2027:80"
     volumes:
@@ -9,10 +11,12 @@ services:
     depends_on:
       - be
       - fe
+    extra_hosts:
+      - "api.local:host-gateway"
 
   postgres:
     image: postgres:16
-    network:
+    networks:
       - internal
     restart: always
     ports:
@@ -23,10 +27,12 @@ services:
       POSTGRES_DB: db_7habits
     volumes:
       - ./docker-dev-volumes/postgres_data:/var/lib/postgresql/data
+    extra_hosts:
+      - "api.local:host-gateway"
   be:
     restart: always
     networks:
-    - internal
+      - internal
     build:
       context: .
       dockerfile: Dockerfile
@@ -68,8 +74,12 @@ services:
       - PHP_CLI_SERVER_WORKERS=4
 
       - BCRYPT_ROUNDS=12
+    extra_hosts:
+      - "api.local:host-gateway"
   fe:
     restart: always
+    networks:
+      - internal
     build:
       context: ./fe/full-version
       dockerfile: fe.Dockerfile
@@ -78,12 +88,19 @@ services:
     ports:
       - 93:3000
     environment:
-      - API_URL=http://api.local:2027/backend/api
-      - NEXT_PUBLIC_APP_URL=http://api.local:2027
+      - API_URL=https://7habits.mediakolaborasi.com/backend/api
+      - NEXT_PUBLIC_APP_URL=https://7habits.mediakolaborasi.com
+      - NEXTAUTH_URL=https://7habits.mediakolaborasi.com
       - NEXTAUTH_SECRET=/83vTMRaUYJObtDcbEa0AqhNXJ2gGVyNkol1nugIFi0=
     extra_hosts:
       - "api.local:host-gateway"
     tty: true
+    command: >
+      sh -c "
+        if [ ! -d node_modules ]; then
+          npm install;
+        fi &&
+        npm run dev"
 networks:
   monitoring:
     external: true
